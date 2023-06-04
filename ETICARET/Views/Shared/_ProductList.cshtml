@@ -1,0 +1,23 @@
+﻿@using ETICARET.Models;
+@model IEnumerable<ProductModel>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <img src="~/Content/@item.Image" />
+
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="/Home/Details/@item.Id">@item.Name</a>
+                    </h5>
+                    <p class="card-text description">@item.Description</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted product-price">@item.Price ₺</small>
+                </div>
+            </div>
+        </div>
+    }
+</div>
