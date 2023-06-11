@@ -2,6 +2,7 @@
 using ETICARET.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,9 +37,79 @@ namespace ETICARET.Controllers
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "Home");
+                // Kayıt İşlemleri
+
+                var user = new ApplicationUser();
+                user.Name = model.Name;
+                user.Surname = model.Surname;
+                user.Email = model.Surname;
+                user.UserName = model.Username;
+
+                var result = UserManager.Create(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    //Kullanıcı oluştu ve kullanıcıya bir role atayabiliriz.
+                    if (RoleManager.RoleExists("user"))
+                    {
+                        UserManager.AddToRole(user.Id, "user");
+                    }
+
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    ModelState.AddModelError("RegisterUserError", "Kullanıcı oluşturma hatası");
+                }
+              
             }
             return View(model);
+        }
+        public ActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(LoginModel model,string ReturnUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                // Login İşlemleri
+                var user = UserManager.Find(model.Username, model.Password);
+
+                if (user != null) 
+                {
+                    // varolan kullanıcı sisteme dahil et.
+                    // ApplicationCookie oluşturup sisteme bırak.
+
+                    var authManager = HttpContext.GetOwinContext().Authentication;
+                    var identityclaims = UserManager.CreateIdentity(user, "ApplicationCookie");
+                    var authProperties = new AuthenticationProperties();
+                    authProperties.IsPersistent = model.RememberMe; // Tarayıca tutulsun mu?
+                    authManager.SignIn(authProperties, identityclaims);
+                    if (!string.IsNullOrEmpty(ReturnUrl))
+                    {
+                        return Redirect(ReturnUrl);
+                    }
+                    else{
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("LoginUserError", "böyle bir kullanıcı yok");
+                }
+            }
+            return View(model);
+        }
+
+
+        public ActionResult Logout()
+        {
+            var authManager = HttpContext.GetOwinContext().Authentication;
+            authManager.SignOut();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

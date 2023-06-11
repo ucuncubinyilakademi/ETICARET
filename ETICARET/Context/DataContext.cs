@@ -11,7 +11,7 @@ namespace ETICARET.Context
     {
         public DataContext():base("Server=102-26\\SQLDERS;Database=ETICARET;Integrated Security=true")
         {
-            Database.SetInitializer(new DataInitializer());
+            
         }
 
         public DbSet<Product> Products { get; set; }

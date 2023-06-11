@@ -7,7 +7,8 @@ using System.Web;
 namespace ETICARET.Models
 {
     public class RegisterModel
-    {      
+    {
+        public int Id { get; set; }
         [Required]
         [Display(Name ="Adınız")]
         public string Name { get; set; }
