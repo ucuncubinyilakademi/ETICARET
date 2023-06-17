@@ -59,6 +59,7 @@ namespace ETICARET.Controllers
                 }
                 else
                 {
+                    result.Errors.ToList().ForEach(x => ModelState.AddModelError("", x));
                     ModelState.AddModelError("RegisterUserError", "Kullanıcı oluşturma hatası");
                 }
               

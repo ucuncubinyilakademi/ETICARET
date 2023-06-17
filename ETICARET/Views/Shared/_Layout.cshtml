@@ -30,6 +30,7 @@
                         <a class="nav-link" href="#">About</a>
                     </li>
                 </ul>
+                @Html.Action("Summary", "Cart")
                 <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -50,9 +51,8 @@
                             <a class="nav-link" href="/Account/Register">Register</a>
                         </li>
                     }
-
-
                 </ul>
+
             </div>
         </div>
     </nav>

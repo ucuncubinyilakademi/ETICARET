@@ -1,0 +1,14 @@
+﻿@using ETICARET.Models
+@model Cart
+
+<style>
+    #cart{
+        color:white
+    }
+</style>
+
+<ul class="navbar-nav my-2 my-lg-0">
+    <li id="cart" class="nav-item">
+        <i class="fa-solid fa-cart-plus"></i> @(Model.CartItems.Count)
+    </li>
+</ul>
