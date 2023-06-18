@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ETICARET.Models.AdminOrderModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Siparişler</h2>
+            <hr />
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Order Number</th>
+                        <th>Order Date</th>
+                        <th>Order Status</th>
+                        <th>Total</th>
+                        <th>Product Count</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.OrderNumber</td>
+                            <td>@item.OrderDate.ToShortDateString()</td>
+                            <td>@item.OrderState</td>
+                            <td>
+                                <i class="fa-solid fa-turkish-lira-sign"></i>
+                                @item.Total
+                            </td>
+                            <td>@item.Count</td>
+                            <td>
+                                <a href="/Account/Details/@item.Id" class="btn btn-primary btn-sm">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+

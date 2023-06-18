@@ -1,0 +1,89 @@
+﻿@model ETICARET.Models.OrderDetailsModel
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Sipariş Detay Bilgileri</h2>
+            <hr />
+
+            <dl class="row">
+                <dt class="col-sm-3">Order State</dt>
+                <dd class="col-sm-9">@Model.OrderState</dd>
+
+                <dt class="col-sm-3">Order Id</dt>
+                <dd class="col-sm-9">@Model.OrderId</dd>
+
+                <dt class="col-sm-3">Order Number</dt>
+                <dd class="col-sm-9">@Model.OrderNumber </dd>
+
+                <dt class="col-sm-3">Total</dt>
+                <dd class="col-sm-9">
+                    <i class="fa-solid fa-turkish-lira-sign"></i>
+                    @Model.Total
+                </dd>
+
+                <dt class="col-sm-3">Order Date</dt>
+                <dd class="col-sm-9">@Model.OrderDate </dd>
+
+                <dt class="col-sm-3">Adres</dt>
+                <dd class="col-sm-9">
+                    @Model.AdresBasligi
+                    <hr>
+                    @Model.Adres
+                    <br>
+                    @Model.Sehir - @Model.Semt - @Model.Mahalle
+                    <br>
+                    @Model.PostaKodu
+                </dd>
+
+                <dt class="col-sm-3">Products</dt>
+                <dd class="col-sm-9">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th style="width: 45%">Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th style="width:10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="~/Content/@item.Image" width="70"/>
+                                    </td>
+                                    <td>
+                                        @item.ProductName
+                                    </td>
+                                    <td>
+                                        @item.Quantity
+                                    </td>
+                                    <td>
+                                        <i class="fa-solid fa-turkish-lira-sign"></i>
+                                        @item.Price
+                                    </td>
+                                    <td>
+                                        <a href="/Home/Details/@item.ProductId" class="btn btn-primary btn-sm" target="_blank">
+                                            <i class="fa-solid fa-angle-double-right"></i>
+                                            Product Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </dd>
+            </dl>
+
+
+
+        </div>
+    </div>
+</div>
+

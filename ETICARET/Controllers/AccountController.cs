@@ -1,4 +1,5 @@
-﻿using ETICARET.Identity;
+﻿using ETICARET.Context;
+using ETICARET.Identity;
 using ETICARET.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -13,6 +14,8 @@ namespace ETICARET.Controllers
 {
     public class AccountController : Controller
     {
+        DataContext db = new DataContext();
+
         private UserManager<ApplicationUser> UserManager;
         private RoleManager<ApplicationRole> RoleManager;
 
@@ -24,6 +27,53 @@ namespace ETICARET.Controllers
             var roleStore = new RoleStore<ApplicationRole>(new IdentityDataContext());
             RoleManager = new RoleManager<ApplicationRole>(roleStore);
         }
+
+        [Authorize]
+        public ActionResult Index()
+        {
+            var username = User.Identity.Name;
+            var orders = db.Orders.Where(i => i.Username == username)
+                .Select(i => new UserOrderModel()
+                {
+                    Id = i.Id,
+                    OrderNumber = i.OrderNumber,
+                    OrderDate = i.OrderDate,
+                    OrderState = i.OrderState,
+                    Total = i.Total
+                }).OrderByDescending(i => i.OrderDate).ToList();
+            return View(orders);
+        }
+
+        [Authorize]
+        public ActionResult Details(int id)
+        {
+            var entity = db.Orders.Where(i => i.Id == id)
+                .Select(i => new OrderDetailsModel()
+                {
+                    OrderId = i.Id,
+                    OrderNumber = i.OrderNumber,
+                    Total = i.Total,
+                    OrderDate = i.OrderDate,
+                    OrderState = i.OrderState,
+                    AdresBasligi = i.AdresBasligi,
+                    Adres = i.Adres,
+                    Sehir = i.Sehir,
+                    Semt = i.Semt,
+                    Mahalle = i.Mahalle,
+                    PostaKodu = i.PostaKodu,
+                    OrderItems = i.OrderItems.Select(a => new OrderItemModel()
+                    {
+                        ProductId = a.ProductId,
+                        ProductName = a.Product.Name,
+                        Image = a.Product.Image,
+                        Quantity = a.Quantity,
+                        Price = a.Price
+                    }).ToList()
+                }).FirstOrDefault();
+
+            return View(entity);
+        }
+
 
         // GET: Account
         public ActionResult Register()

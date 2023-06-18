@@ -4,6 +4,8 @@ using ETICARET.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -64,5 +66,25 @@ namespace ETICARET.Controllers
             return PartialView(db.Categories.ToList());
         }
 
+        public ActionResult MailSend(string email)
+        {
+            var message = new MailMessage();
+            message.From = new MailAddress("test_altan_emre_1989@hotmail.com");
+
+           message.To.Add(new MailAddress(email));
+          
+            message.Subject = "E-Bülten";
+            message.Body = "Firma e-bülten aboneliğiniz gerçekleştirilmiştir.<br><b> Her ay düzenli olarak email alacaksınız.</b>";
+            message.IsBodyHtml = true;
+
+            using (var smtp = new SmtpClient("smtp-mail.outlook.com", 587))
+            {
+                smtp.EnableSsl = true;
+                smtp.Credentials = new NetworkCredential("test_altan_emre_1989@hotmail.com", "UBY12345");
+
+                smtp.Send(message);
+                return RedirectToAction("Index");
+            }
+        }
     }
 }
